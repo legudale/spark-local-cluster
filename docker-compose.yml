@@ -1,0 +1,33 @@
+version: '3'
+services:
+  spark-master:
+    build: .
+    container_name: spark-master
+    networks:
+      - cluster
+    ports:
+      - 7077:7077
+      - 8080:8080
+    command: /spark/bin/spark-class org.apache.spark.deploy.master.Master --ip spark-master --port 7077 --webui-port 8080
+  spark-worker1:
+    build: .
+    container_name: spark-worker1
+    networks:
+      - cluster
+    ports:
+      - 8081:8080
+    depends_on:
+      - spark-master
+    command: /spark/bin/spark-class org.apache.spark.deploy.worker.Worker --webui-port 8080 spark://spark-master:7077
+  spark-worker2:
+    build: .
+    container_name: spark-worker2
+    networks:
+      - cluster
+    ports:
+      - 8082:8080
+    depends_on:
+      - spark-master
+    command: /spark/bin/spark-class org.apache.spark.deploy.worker.Worker --webui-port 8080 spark://spark-master:7077
+networks:
+  cluster:
