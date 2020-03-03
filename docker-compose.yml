@@ -5,6 +5,8 @@ services:
     container_name: spark-master
     networks:
       - cluster
+    volumes:
+      - .:/spark/pwd
     ports:
       - 7077:7077
       - 8080:8080
